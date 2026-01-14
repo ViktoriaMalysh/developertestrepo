@@ -1,8 +1,8 @@
-import { ReactNode } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { Mail, Phone } from 'lucide-react';
-import { Divider } from '@/components/ui/Divider';
+import { ReactNode } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { Mail, Phone } from "lucide-react";
+import { Divider } from "@/components/ui/Divider";
 
 interface TeamMemberTemplateProps {
   children?: ReactNode;
@@ -22,10 +22,9 @@ interface TeamMemberTemplateProps {
 export default function TeamMemberTemplate({
   children,
   teamMember,
-  basePath = '/our-team',
+  basePath = "/our-team",
 }: TeamMemberTemplateProps) {
   return (
-
     <main className="flex-grow">
       {/* Hero Section */}
       <section className="py-20 bg-theme-bg/80 relative w-full">
@@ -58,17 +57,26 @@ export default function TeamMemberTemplate({
       </section>
 
       {/* Navigation Breadcrumb */}
-      <div className="bg-white pt-8 pb-4">
+      <div className="pt-8 pb-4 bg-[#eae0d5]">
         <div className="container mx-auto px-4 max-w-screen-xl">
-          <Link href={basePath} className="inline-flex items-center text-secondary hover:text-accent transition-colors">
-            <Image src="/Images/icons/arrow-left.svg" alt="Arrow Left" width={16} height={16} className="mr-2" />
+          <Link
+            href={basePath}
+            className="inline-flex items-center text-secondary hover:text-accent transition-colors"
+          >
+            <Image
+              src="/Images/icons/arrow-left.svg"
+              alt="Arrow Left"
+              width={16}
+              height={16}
+              className="mr-2"
+            />
             <span>Back to Team</span>
           </Link>
         </div>
       </div>
 
       {/* Team Member Content */}
-      <div className="py-8 bg-white">
+      <div className="py-8 bg-[#eae0d5]">
         <div className="container mx-auto px-4 max-w-screen-xl">
           <div className="bg-white rounded-xl shadow-lg p-8 mb-10">
             {/* Bio Section */}
@@ -95,7 +103,9 @@ export default function TeamMemberTemplate({
                         href={`mailto:${teamMember.email}`}
                         className="text-theme-body hover:text-accent transition-colors"
                       >
-                        {teamMember.hide_email_in_website ? 'Email Hidden' : teamMember.email}
+                        {teamMember.hide_email_in_website
+                          ? "Email Hidden"
+                          : teamMember.email}
                       </a>
                     </div>
                   )}
@@ -140,13 +150,18 @@ export default function TeamMemberTemplate({
               Have Questions? Get in Touch
             </h3>
             <p className="text-theme-body mb-6 max-w-2xl mx-auto">
-              Contact {teamMember.name} directly or schedule a consultation to discuss your insurance needs.
+              Contact {teamMember.name} directly or schedule a consultation to
+              discuss your insurance needs.
             </p>
             <Link
-              href={basePath.includes('/locations/') ? `${basePath.split('/our-team')[0]}/contact` : '/contact'}
+              href={
+                basePath.includes("/locations/")
+                  ? `${basePath.split("/our-team")[0]}/contact`
+                  : "/contact"
+              }
               className="inline-block bg-accent hover:bg-accent/90 text-accent-foreground font-bold py-3 px-8 rounded-full transition duration-300 shadow-md hover:shadow-lg"
             >
-              Contact {teamMember.name.split(' ')[0]}
+              Contact {teamMember.name.split(" ")[0]}
             </Link>
           </div>
         </div>

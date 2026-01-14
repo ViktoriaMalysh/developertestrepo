@@ -1,16 +1,19 @@
-import React from 'react';
-import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
-import RelatedPolicyPages from '@/components/glossary/RelatedPolicyPages';
-import InsuranceCTA from '@/components/common/InsuranceCTA';
-import Breadcrumb from '@/components/common/Breadcrumb';
-import { Divider } from '@/components/ui/Divider';
-import { getClientData } from '@/lib/client';
-import { getWebsiteBySlug, isMultiLocation } from '@/lib/website';
-import { validateAndGetRelatedPolicies } from '@/lib/services/glossary';
-import { injectClientData, formatGlossaryContent } from '@/lib/utils/content-formatters';
-import { getSupabaseClient } from '@/lib/supabase/server';
-import { getSchemaDefaults, buildPageUrl } from '@/lib/structured-data';
+import React from "react";
+import { Metadata } from "next";
+import { notFound } from "next/navigation";
+import RelatedPolicyPages from "@/components/glossary/RelatedPolicyPages";
+import InsuranceCTA from "@/components/common/InsuranceCTA";
+import Breadcrumb from "@/components/common/Breadcrumb";
+import { Divider } from "@/components/ui/Divider";
+import { getClientData } from "@/lib/client";
+import { getWebsiteBySlug, isMultiLocation } from "@/lib/website";
+import { validateAndGetRelatedPolicies } from "@/lib/services/glossary";
+import {
+  injectClientData,
+  formatGlossaryContent,
+} from "@/lib/utils/content-formatters";
+import { getSupabaseClient } from "@/lib/supabase/server";
+import { getSchemaDefaults, buildPageUrl } from "@/lib/structured-data";
 
 interface PageProps {
   params: Promise<{ slug: string; term: string }>;
@@ -24,7 +27,9 @@ export async function generateStaticParams() {
   return [];
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { slug, term: termSlug } = await params;
   const multiLocation = await isMultiLocation();
   if (!multiLocation) return {};
@@ -41,26 +46,34 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const locationId = websiteData.client_locations?.id;
   const { data: term } = await supabase
-    .from('client_insurance_glossary_pages')
-    .select('id, slug, term, head, body')
-    .eq('client_id', clientId)
-    .eq('location_id', locationId)
-    .eq('slug', termSlug)
-    .eq('published', true)
+    .from("client_insurance_glossary_pages")
+    .select("id, slug, term, head, body")
+    .eq("client_id", clientId)
+    .eq("location_id", locationId)
+    .eq("slug", termSlug)
+    .eq("published", true)
     .single();
 
-  const locationName = websiteData.client_locations?.location_name || '';
-  const agencyName = clientData?.agency_name || '';
-  const canonicalUrl = clientData?.client_website?.canonical_url || '';
+  const locationName = websiteData.client_locations?.location_name || "";
+  const agencyName = clientData?.agency_name || "";
+  const canonicalUrl = clientData?.client_website?.canonical_url || "";
   const injectedHead =
-    clientData && term ? injectClientData(term.head, clientData as any) : term?.head || '';
-  const plainTextDescription = (injectedHead || term?.term || 'Insurance term definition')
-    .replace(/\n/g, ' ')
+    clientData && term
+      ? injectClientData(term.head, clientData as any)
+      : term?.head || "";
+  const plainTextDescription = (
+    injectedHead ||
+    term?.term ||
+    "Insurance term definition"
+  )
+    .replace(/\n/g, " ")
     .substring(0, 160);
 
   return {
-    title: term ? `${term.term} | ${locationName}` : 'Term Not Found',
-    description: term ? plainTextDescription : 'The requested insurance term could not be found.',
+    title: term ? `${term.term} | ${locationName}` : "Term Not Found",
+    description: term
+      ? plainTextDescription
+      : "The requested insurance term could not be found.",
     metadataBase: canonicalUrl ? new URL(canonicalUrl) : undefined,
     alternates: {
       canonical: `/locations/${slug}/glossary/${termSlug}`,
@@ -71,17 +84,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       nocache: false,
     },
     openGraph: {
-      title: term ? `${term.term} | ${locationName}` : 'Term Not Found',
-      description: term ? plainTextDescription : 'The requested insurance term could not be found.',
+      title: term ? `${term.term} | ${locationName}` : "Term Not Found",
+      description: term
+        ? plainTextDescription
+        : "The requested insurance term could not be found.",
       url: `/locations/${slug}/glossary/${termSlug}`,
       siteName: agencyName,
-      locale: 'en_US',
-      type: 'article',
+      locale: "en_US",
+      type: "article",
     },
     twitter: {
-      card: 'summary_large_image',
-      title: term ? `${term.term} | ${locationName}` : 'Term Not Found',
-      description: term ? plainTextDescription : 'The requested insurance term could not be found.',
+      card: "summary_large_image",
+      title: term ? `${term.term} | ${locationName}` : "Term Not Found",
+      description: term
+        ? plainTextDescription
+        : "The requested insurance term could not be found.",
     },
   };
 }
@@ -109,53 +126,63 @@ export default async function LocationGlossaryTermPage({ params }: PageProps) {
   const locationId = websiteData.client_locations?.id;
 
   const { data: term } = await supabase
-    .from('client_insurance_glossary_pages')
-    .select('id, slug, term, head, body, related_policy_links, created_at, updated_at')
-    .eq('client_id', clientId)
-    .eq('location_id', locationId)
-    .eq('slug', termSlug)
-    .eq('published', true)
+    .from("client_insurance_glossary_pages")
+    .select(
+      "id, slug, term, head, body, related_policy_links, created_at, updated_at"
+    )
+    .eq("client_id", clientId)
+    .eq("location_id", locationId)
+    .eq("slug", termSlug)
+    .eq("published", true)
     .single();
 
   if (!term) {
     notFound();
   }
-  
+
   // related_policy_links is already an array of {slug, title} from AI generation
   const relatedPolicyLinks = term.related_policy_links || [];
   // Validate against published policies for this location
-  const relatedPolicyPages = await validateAndGetRelatedPolicies(clientId, locationId, relatedPolicyLinks, slug);
+  const relatedPolicyPages = await validateAndGetRelatedPolicies(
+    clientId,
+    locationId,
+    relatedPolicyLinks,
+    slug
+  );
 
   // Process content with client data injection
   const injectedBody = injectClientData(term.body, clientData as any);
   const processedBody = formatGlossaryContent(injectedBody, term.term);
 
   const { agencyName, canonicalUrl } = getSchemaDefaults(clientData);
-  const pageUrl = buildPageUrl(canonicalUrl, `/locations/${slug}/glossary/${term.slug}`);
+  const pageUrl = buildPageUrl(
+    canonicalUrl,
+    `/locations/${slug}/glossary/${term.slug}`
+  );
   const glossaryUrl = buildPageUrl(canonicalUrl, `/locations/${slug}/glossary`);
   const homeUrl = buildPageUrl(canonicalUrl, `/locations/${slug}`);
 
   const ldJsonSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'DefinedTerm',
+    "@context": "https://schema.org",
+    "@type": "DefinedTerm",
     name: term.term,
     description:
       injectedBody
-        .split('\n')
+        .split("\n")
         .find((line) => line.trim())
         ?.substring(0, 200) || term.term,
     url: pageUrl,
     inDefinedTermSet: {
-      '@type': 'DefinedTermSet',
-      name: 'Insurance Glossary',
+      "@type": "DefinedTermSet",
+      name: "Insurance Glossary",
       url: glossaryUrl,
     },
     publisher: {
-      '@type': 'Organization',
+      "@type": "Organization",
       name: agencyName,
       url: canonicalUrl,
       logo: {
-        '@type': 'ImageObject',
+        "@type": "ImageObject",
         url: `${canonicalUrl}/Images/logo.png`,
       },
     },
@@ -164,9 +191,15 @@ export default async function LocationGlossaryTermPage({ params }: PageProps) {
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Hero Section */}
-      <section className="py-20 relative w-full" style={{ backgroundColor: 'var(--hero-bg)' }}>
+      <section
+        className="py-20 relative w-full"
+        style={{ backgroundColor: "var(--hero-bg)" }}
+      >
         <div className="container mx-auto px-4 py-4 max-w-screen-2xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6 text-center" style={{ color: 'var(--hero-text)' }}>
+          <h1
+            className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6 text-center"
+            style={{ color: "var(--hero-text)" }}
+          >
             {term.term}
           </h1>
         </div>
@@ -177,8 +210,8 @@ export default async function LocationGlossaryTermPage({ params }: PageProps) {
       <div className="container mx-auto px-4 max-w-4xl pt-6">
         <Breadcrumb
           items={[
-            { label: 'Home', href: `/locations/${slug}` },
-            { label: 'Glossary', href: `/locations/${slug}/glossary` },
+            { label: "Home", href: `/locations/${slug}` },
+            { label: "Glossary", href: `/locations/${slug}/glossary` },
             { label: term.term },
           ]}
         />
@@ -186,11 +219,11 @@ export default async function LocationGlossaryTermPage({ params }: PageProps) {
 
       {/* Main Content */}
       <section className="container mx-auto px-4 py-12">
-        <div className="max-w-4xl mx-auto bg-card-bg rounded-xl shadow-lg p-8 border border-card-border">
+        <div className="max-w-4xl mx-auto bg-card-bg rounded-xl shadow-lg p-8 border border-[var(--divider-color)]">
           {processedBody && (
-            <div 
-              className="prose prose-lg max-w-none text-theme-body prose-headings:text-primary prose-headings:font-heading prose-h2:text-xl prose-h2:mt-6 prose-h2:mb-3 prose-h3:text-lg prose-h3:mt-5 prose-h3:mb-2 prose-p:leading-relaxed prose-p:mb-4 prose-a:text-accent prose-a:no-underline hover:prose-a:underline prose-strong:text-primary" 
-              dangerouslySetInnerHTML={{ __html: processedBody }} 
+            <div
+              className="prose prose-lg max-w-none text-theme-body prose-headings:text-primary prose-headings:font-heading prose-h2:text-xl prose-h2:mt-6 prose-h2:mb-3 prose-h3:text-lg prose-h3:mt-5 prose-h3:mb-2 prose-p:leading-relaxed prose-p:mb-4 prose-a:text-accent prose-a:no-underline hover:prose-a:underline prose-strong:text-primary"
+              dangerouslySetInnerHTML={{ __html: processedBody }}
             />
           )}
 
@@ -208,7 +241,9 @@ export default async function LocationGlossaryTermPage({ params }: PageProps) {
         primaryButtonHref={`/locations/${slug}/contact`}
         secondaryButtonText="Browse All Terms"
         secondaryButtonHref={`/locations/${slug}/glossary`}
-        agencyName={clientData?.agency_name ? ` at ${clientData.agency_name}` : ''}
+        agencyName={
+          clientData?.agency_name ? ` at ${clientData.agency_name}` : ""
+        }
       />
 
       <script
@@ -219,23 +254,23 @@ export default async function LocationGlossaryTermPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'BreadcrumbList',
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
             itemListElement: [
               {
-                '@type': 'ListItem',
+                "@type": "ListItem",
                 position: 1,
-                name: 'Home',
+                name: "Home",
                 item: homeUrl,
               },
               {
-                '@type': 'ListItem',
+                "@type": "ListItem",
                 position: 2,
-                name: 'Glossary',
+                name: "Glossary",
                 item: glossaryUrl,
               },
               {
-                '@type': 'ListItem',
+                "@type": "ListItem",
                 position: 3,
                 name: term.term,
                 item: pageUrl,
@@ -248,5 +283,5 @@ export default async function LocationGlossaryTermPage({ params }: PageProps) {
   );
 }
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 export const dynamicParams = true;

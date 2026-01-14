@@ -1,5 +1,5 @@
-import React from 'react';
-import Link from 'next/link';
+import React from "react";
+import Link from "next/link";
 
 interface InsuranceCTAProps {
   title: string;
@@ -20,10 +20,12 @@ export default function InsuranceCTA({
   secondaryButtonHref,
   agencyName,
 }: InsuranceCTAProps) {
-  const descriptionWithAgency = agencyName ? description.replace(/\{agency_name\}/g, agencyName) : description;
+  const descriptionWithAgency = agencyName
+    ? description.replace(/\{agency_name\}/g, agencyName)
+    : description;
 
   return (
-    <section className="py-16">
+    <section className="py-16 bg-[#eae0d5]">
       <div className="container mx-auto px-4 max-w-screen-xl text-center">
         <h2 className="text-3xl font-heading font-bold text-primary mb-4">
           {title}

@@ -1,11 +1,13 @@
-'use client';
+"use client";
 
-import { Search } from 'lucide-react';
-import { useState } from 'react';
+import { Search } from "lucide-react";
+import { useState } from "react";
 
 export default function FAQSearch({ items }) {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [searchResults, setSearchResults] = useState<Array<{ categoryId: string, faqIndex: number, question: string }>>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState<
+    Array<{ categoryId: string; faqIndex: number; question: string }>
+  >([]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const term = e.target.value.toLowerCase();
@@ -16,9 +18,13 @@ export default function FAQSearch({ items }) {
       return;
     }
 
-    const results: Array<{ categoryId: string, faqIndex: number, question: string }> = [];
+    const results: Array<{
+      categoryId: string;
+      faqIndex: number;
+      question: string;
+    }> = [];
 
-    items.forEach(category => {
+    items.forEach((category) => {
       category.faqs.forEach((faq, index) => {
         if (
           faq.question.toLowerCase().includes(term) ||
@@ -27,7 +33,7 @@ export default function FAQSearch({ items }) {
           results.push({
             categoryId: category.id,
             faqIndex: index,
-            question: faq.question
+            question: faq.question,
           });
         }
       });
@@ -46,7 +52,10 @@ export default function FAQSearch({ items }) {
           onChange={handleSearch}
           className="w-full py-3 px-4 pl-12 rounded-full border border-secondary focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
         />
-        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-theme-body" size={20} />
+        <Search
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 text-theme-body"
+          size={20}
+        />
       </div>
 
       {/* Search results */}
@@ -58,7 +67,9 @@ export default function FAQSearch({ items }) {
               <li key={idx} className="py-2">
                 <button
                   onClick={() => {
-                    document.getElementById(result.categoryId)?.scrollIntoView({ behavior: 'smooth' });
+                    document
+                      .getElementById(result.categoryId)
+                      ?.scrollIntoView({ behavior: "smooth" });
                   }}
                   className="text-left w-full text-primary hover:text-accent transition-colors"
                 >
