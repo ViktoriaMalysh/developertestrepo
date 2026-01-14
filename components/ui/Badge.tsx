@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 
 interface BadgeProps {
   children: React.ReactNode;
@@ -8,10 +8,10 @@ interface BadgeProps {
   style?: React.CSSProperties;
 }
 
-export function Badge({ children, className = '', style }: BadgeProps) {
+export function Badge({ children, className = "", style }: BadgeProps) {
   const defaultStyle: React.CSSProperties = {
     backgroundColor: `color-mix(in srgb, var(--color-card-badge-bg) calc(var(--color-card-badge-opacity) * 100%), transparent)`,
-    color: 'var(--color-card-badge-text)',
+    color: "var(--color-card-badge-text)",
   };
 
   return (
@@ -24,13 +24,14 @@ export function Badge({ children, className = '', style }: BadgeProps) {
   );
 }
 
-export function BadgeSmall({ children, className = '' }: BadgeProps) {
+export function BadgeSmall({ children, className = "" }: BadgeProps) {
   return (
     <div
       className={`inline-block rounded-full px-4 py-1 text-sm font-medium ${className}`}
       style={{
-        backgroundColor: `color-mix(in srgb, var(--color-card-badge-bg) calc(var(--color-card-badge-opacity) * 100%), transparent)`,
-        color: 'var(--color-card-badge-text)',
+        // backgroundColor: `color-mix(in srgb, var(--color-card-badge-bg) calc(var(--color-card-badge-opacity) * 100%), transparent)`,
+        backgroundColor: "var(--divider-color)",
+        color: "var(--color-card-badge-text)",
       }}
     >
       {children}

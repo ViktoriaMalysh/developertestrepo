@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import Link from 'next/link';
-import LocationPickerPopup from '@/components/ui/LocationPickerPopup';
+import React, { useState } from "react";
+import Link from "next/link";
+import LocationPickerPopup from "@/components/ui/LocationPickerPopup";
 
 interface Location {
   id: string;
@@ -19,7 +19,7 @@ interface HeroCTAButtonProps {
 
 const HeroCTAButton: React.FC<HeroCTAButtonProps> = ({
   isMultiLocation,
-  locations
+  locations,
 }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
@@ -38,7 +38,7 @@ const HeroCTAButton: React.FC<HeroCTAButtonProps> = ({
     <>
       <button
         onClick={() => setIsPopupOpen(true)}
-        className="inline-flex items-center gap-2 bg-accent hover:bg-accent/90 text-accent-foreground font-bold py-3 px-8 rounded-full text-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+        className="inline-flex items-center gap-2 bg-[var(--divider-color)] hover:bg-accent/90 text-accent-foreground font-bold py-3 px-8 rounded-full text-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
       >
         Find a Location
       </button>

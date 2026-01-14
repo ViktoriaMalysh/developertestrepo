@@ -1,6 +1,6 @@
-import React from 'react';
-import { supabase } from '@/lib/supabase';
-import Testimonials from './Testimonials';
+import React from "react";
+import { supabase } from "@/lib/supabase";
+import Testimonials from "./Testimonials";
 
 interface ReviewItem {
   author: string;
@@ -52,35 +52,35 @@ async function getTestimonialsSection(): Promise<ReviewsContent | null> {
   const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
 
   if (!clientId) {
-    console.error('NEXT_PUBLIC_CLIENT_ID is not set');
+    console.error("NEXT_PUBLIC_CLIENT_ID is not set");
     return null;
   }
 
   // Fetch section header from client_home_page
   const { data: homePageData, error: homePageError } = await supabase
-    .from('client_home_page')
-    .select('testimonials_section')
-    .eq('client_id', clientId)
+    .from("client_home_page")
+    .select("testimonials_section")
+    .eq("client_id", clientId)
     .maybeSingle();
 
   if (homePageError) {
-    console.error('Error fetching testimonials section header:', homePageError);
+    console.error("Error fetching testimonials section header:", homePageError);
   }
 
   // Fetch google_reviews from all locations for this client (source of truth from Review Posts)
   const { data: locationsData, error: locationsError } = await supabase
-    .from('client_locations')
-    .select('google_reviews')
-    .eq('client_id', clientId);
+    .from("client_locations")
+    .select("google_reviews")
+    .eq("client_id", clientId);
 
   if (locationsError) {
-    console.error('Error fetching location testimonials:', locationsError);
+    console.error("Error fetching location testimonials:", locationsError);
     return null;
   }
 
   // Aggregate all google_reviews from all locations
   const allTestimonials: ReviewItem[] = [];
-  
+
   if (locationsData) {
     for (const location of locationsData) {
       const googleReviews = location.google_reviews as GoogleReview[] | null;
@@ -104,25 +104,49 @@ async function getTestimonialsSection(): Promise<ReviewsContent | null> {
   }
 
   // Get section header from home page data or use defaults
-  const sectionHeader = (homePageData as ClientHomePageData | null)?.testimonials_section;
+  const sectionHeader = (homePageData as ClientHomePageData | null)
+    ?.testimonials_section;
 
   return {
-    tagline: sectionHeader?.tagline || { type: 'tagline', content: 'Testimonials' },
-    subtitle: sectionHeader?.subtitle || { tag: 'h2', type: 'heading', content: 'What Our Customers Say' },
-    description: sectionHeader?.description || { type: 'text', content: 'Based on real client reviews' },
+    tagline: sectionHeader?.tagline || {
+      type: "tagline",
+      content: "Testimonials",
+    },
+    subtitle: sectionHeader?.subtitle || {
+      tag: "h2",
+      type: "heading",
+      content: "What Our Customers Say",
+    },
+    description: sectionHeader?.description || {
+      type: "text",
+      content: "Based on real client reviews",
+    },
     reviews: {
-      type: 'reviews',
+      type: "reviews",
       items: allTestimonials,
     },
-    button_link_1: sectionHeader?.button_link_1 || { url: '', text: '', type: 'button_link' },
-    button_link_2: sectionHeader?.button_link_2 || { url: '', text: '', type: 'button_link', content: '' },
+    button_link_1: sectionHeader?.button_link_1 || {
+      url: "",
+      text: "",
+      type: "button_link",
+    },
+    button_link_2: sectionHeader?.button_link_2 || {
+      url: "",
+      text: "",
+      type: "button_link",
+      content: "",
+    },
   };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default async function TestimonialsWrapper({ locationId }: { locationId?: string | null }) {
+export default async function TestimonialsWrapper({
+  locationId,
+}: {
+  locationId?: string | null;
+}) {
   const reviewsContent = await getTestimonialsSection();
-  
+
   if (!reviewsContent) {
     return null;
   }
