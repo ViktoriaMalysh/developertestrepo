@@ -1,9 +1,9 @@
 import { ReactNode } from "react";
-import Link from '@/components/location/Link';
+import Link from "@/components/location/Link";
 import Image from "next/image";
 import YouTubeEmbed from "./YouTubeEmbed";
 import RelatedTermsSection from "./RelatedTermsSection";
-import { Divider } from '@/components/ui/Divider';
+import { Divider } from "@/components/ui/Divider";
 
 interface FeaturesSectionProps {
   title: string;
@@ -20,7 +20,7 @@ interface FaqSectionProps {
 
 const FeaturesSection = ({ title, items }: FeaturesSectionProps) => (
   <section className="my-10">
-    <div className="bg-card-bg rounded-xl shadow-lg p-8 border border-card-border">
+    <div className="bg-card-bg rounded-xl shadow-lg p-8 border border-[var(--divider-color)]">
       <h2 className="text-2xl font-heading font-bold text-primary mb-4">
         {title}
       </h2>
@@ -37,7 +37,7 @@ const FeaturesSection = ({ title, items }: FeaturesSectionProps) => (
 
 const FaqSection = ({ title, faqs }: FaqSectionProps) => (
   <section className="my-10">
-    <div className="bg-card-bg rounded-xl shadow-lg p-8 border border-card-border">
+    <div className="bg-card-bg rounded-xl shadow-lg p-8 border border-[var(--divider-color)]">
       <h2 className="text-2xl font-heading font-bold text-primary mb-6">
         {title}
       </h2>
@@ -50,7 +50,9 @@ const FaqSection = ({ title, faqs }: FaqSectionProps) => (
             <h3 className="text-base font-semibold text-primary mb-1">
               {faq.question}
             </h3>
-            <p className="text-sm text-theme-body leading-relaxed">{faq.answer}</p>
+            <p className="text-sm text-theme-body leading-relaxed">
+              {faq.answer}
+            </p>
           </div>
         ))}
       </div>
@@ -96,22 +98,29 @@ export default function PolicyPageTemplate({
   faqs = [],
   youtubeUrl,
 }: PolicyPageTemplateProps) {
-
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <main className="min-h-screen bg-[#eae0d5] from-gray-50 to-white">
       {/* Hero Section - follows contact page pattern for multi-location */}
-      <section className="py-20 relative w-full" style={{ backgroundColor: 'var(--hero-bg)' }}>
+      <section
+        className="py-20 relative w-full"
+        style={{ backgroundColor: "var(--hero-bg)" }}
+      >
         <div className="container mx-auto px-4 py-4 max-w-screen-2xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6 text-center" style={{ color: 'var(--hero-text)' }}>
+          <h1
+            className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6 text-center"
+            style={{ color: "var(--hero-text)" }}
+          >
             {heroSection.heading}
           </h1>
 
           {heroSection.subheading && (
-            <p className="text-lg md:text-xl lg:text-2xl text-center max-w-3xl mx-auto" style={{ color: 'var(--hero-text-secondary)' }}>
+            <p
+              className="text-lg md:text-xl lg:text-2xl text-center max-w-3xl mx-auto"
+              style={{ color: "var(--hero-text-secondary)" }}
+            >
               {heroSection.subheading}
             </p>
           )}
-
         </div>
 
         <Divider position="bottom" />
@@ -131,7 +140,7 @@ export default function PolicyPageTemplate({
 
       {/* Main Content Sections */}
       <section className="container mx-auto px-4 py-12">
-        <div className="max-w-4xl mx-auto bg-card-bg rounded-xl shadow-lg p-8 mt-8 border border-card-border">
+        <div className="max-w-4xl mx-auto bg-card-bg rounded-xl shadow-lg p-8 mt-8 border border-[var(--divider-color)]">
           {contentSections &&
             contentSections.length > 0 &&
             contentSections.map((item, idx) => {
@@ -173,7 +182,10 @@ export default function PolicyPageTemplate({
 
                 case "cta":
                   return (
-                    <div key={idx} className="text-center mt-10 mb-8 bg-secondary/10 rounded-xl p-8">
+                    <div
+                      key={idx}
+                      className="text-center mt-10 mb-8 bg-secondary/10 rounded-xl p-8"
+                    >
                       <h3 className="text-xl font-heading font-bold text-primary mb-4">
                         {item.title}
                       </h3>
@@ -192,21 +204,24 @@ export default function PolicyPageTemplate({
                 case "faqs":
                   return (
                     <div key={idx} className="mb-8">
-                      <FaqSection title={item.title || "Frequently Asked Questions"} faqs={item.faqs || []} />
+                      <FaqSection
+                        title={item.title || "Frequently Asked Questions"}
+                        faqs={item.faqs || []}
+                      />
                     </div>
                   );
-                  
+
                 default:
                   return null;
               }
             })}
-            
-            {/* Render page-level FAQs if provided */}
-            {faqs.length > 0 && (
-              <div className="mb-8">
-                <FaqSection title="Frequently Asked Questions" faqs={faqs} />
-              </div>
-            )}
+
+          {/* Render page-level FAQs if provided */}
+          {faqs.length > 0 && (
+            <div className="mb-8">
+              <FaqSection title="Frequently Asked Questions" faqs={faqs} />
+            </div>
+          )}
           {children}
         </div>
       </section>
@@ -235,7 +250,7 @@ export default function PolicyPageTemplate({
               {relatedPolicies.map((policy) => (
                 <li key={policy.slug}>
                   <Link
-                    href={`${policy.basePath || '/policies'}/${policy.slug}`}
+                    href={`${policy.basePath || "/policies"}/${policy.slug}`}
                     className="bg-card-bg rounded-xl p-5 text-center shadow-md border border-card-border hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 flex flex-col items-center justify-center h-full"
                   >
                     <span className="text-lg font-heading font-semibold text-primary mb-2">

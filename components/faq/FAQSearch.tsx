@@ -60,7 +60,7 @@ export default function FAQSearch({ items }) {
 
       {/* Search results */}
       {searchResults.length > 0 && (
-        <div className="mt-4 bg-white p-4 rounded-lg shadow-md border border-secondary animate-fade-in">
+        <div className="mt-4 bg-white p-4 rounded-lg shadow-md border border-[var(--divider-color)] animate-fade-in">
           <h3 className="font-bold text-primary mb-2">Search Results:</h3>
           <ul className="divide-y divide-secondary/30">
             {searchResults.map((result, idx) => (
